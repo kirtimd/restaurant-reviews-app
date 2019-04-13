@@ -374,7 +374,7 @@ In restaurant.html, for larger width, two columns : map and restaurant-container
 @media screen and (max-width: 500px) { /* 500px or lower */
 
 	body {
-		font-size: 8px;
+		font-size: 8px; 
 	}
 
 /* Rearrange the filter options panel
