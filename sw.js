@@ -1,8 +1,9 @@
 
+const cacheName = 'app-static-v1';
 // Open up the cache and store chosen code and data inside it
 self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open('app-static-v1')
+    caches.open(cacheName)
          .then(function(cache) {
 
             return cache.addAll([
@@ -26,20 +27,37 @@ self.addEventListener('install', function(event) {
   )
 });
 
-//use the cache to respond to event requests
-self.addEventListener('fetch', function(event) {
-  //console.log('Fetch:'+event.request);
-  event.respondWith(
-    caches.match(event.request).then(function(response) {
-      if(response){
-         console.log("Response fetched from cache!");
-         return response; //if response found in cache, return response
-       }
-      else {
-        console.log("Response fetched from network.");
-        fetch(event.request); //else fetch response from the network
 
-      }
-    })
-  )
+//https://developers.google.com/web/fundamentals/primers/service-workers/
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          console.log("Response fetched from cache!");
+          return response;
+        }
+        //else fetch from network
+        return fetch(event.request)
+          .then(function(response) {
+            // if response not valid, return it without caching
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            //else if response is valid :
+            //clone the response, so that if the app goes Offline
+            //the service worker can respond with this cached response
+            let responseClone = response.clone();
+
+            caches.open(cacheName)
+              .then(function(cache) {
+                cache.put(event.request, responseClone);
+              });
+              console.log("Response cloned and cached!");
+            return response;
+          }
+        );
+      })
+    );
 });

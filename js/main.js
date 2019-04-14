@@ -72,15 +72,15 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
+  // let loc = {
+  //   lat: 40.722216,
+  //   lng: -73.987501
+  // };
+  // self.map = new google.maps.Map(document.getElementById('map'), {
+  //   zoom: 12,
+  //   center: loc,
+  //   scrollwheel: false
+  // });
   updateRestaurants();
 }
 
@@ -142,10 +142,10 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = `Inside view of ${restaurant.name}`; 
+  image.alt = `Inside view of ${restaurant.name}`;
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
 
